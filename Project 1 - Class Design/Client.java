@@ -188,30 +188,6 @@ public class Client
         this.address = address; 
     }
     /**
-     * Updates the quantity of an existing wishlist entry.
-     *
-     * If {@code quantity} is less than or equal to zero, the entry is
-     * removed. If the product is not found on the wishlist, this method does
-     * nothing.
-     *
-     * @param productID the ID of the product to update
-     * @param quantity  the new quantity, or {@code <= 0} to remove the entry
-     */
-    public void updateWishlistEntry(String productID, int quantity)
-    {
-        Iterator<WishlistItem> it = wishlist.iterator();
-        while (it.hasNext())
-        {
-            WishlistItem w = it.next();
-            if (w.getProductID().equals(productID))
-            {
-                if (quantity <= 0) it.remove();          // remove
-                else w.setQuantity(quantity);            // change quantity (or no-op if same)
-                return;
-            }
-        }
-    }
-    /**
      * Sets the quantity of a wishlist entry. Does nothing if the product is
      * not on the wishlist.
      *
