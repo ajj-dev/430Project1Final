@@ -57,10 +57,13 @@ public class Warehouse
      * @param name  the product's display name
      * @param price the unit sale price in dollars
      * @param stock the number of units initially on hand
-     * @return the id generated for the new product
+     * @return the id generated for the new product, or {@code null} if the
+     *         price is negative or not a real number, or the stock is negative
      */
     public String addProduct(String name, double price, int stock)
     {
+        if (!Double.isFinite(price) || price < 0 || stock < 0)
+            return null;   // reject invalid product data
         Product p = new Product(name, price, stock);
         catalog.addProduct(p);
         return p.getID();
@@ -86,11 +89,14 @@ public class Warehouse
      *
      * @param clientID  the id of the client
      * @param productID the id of the product
-     * @param quantity  the number of units to add
-     * @return {@code true} if the entry was added; {@code false} if either id is unknown
+     * @param quantity  the number of units to add; must be positive
+     * @return {@code true} if the entry was added; {@code false} if either id is
+     *         unknown or the quantity is not positive
      */
     public boolean addToWishlist(String clientID, String productID, int quantity)
     {
+        if (quantity <= 0)
+            return false;  // validate quantity
         if (clientList.searchForClient(clientID) == null)
             return false;  // validate client
         if (catalog.searchForProduct(productID) == null)
@@ -370,15 +376,15 @@ public class Warehouse
      * balance by the amount paid.
      *
      * @param clientID the id of the paying client
-     * @param amount   the amount paid; must be positive
+     * @param amount   the amount paid; must be a positive, finite number
      * @return a confirmation including the client's new balance, or a message if
-     *         the client is unknown or the amount is not positive
+     *         the client is unknown or the amount is not a positive number
      */
     public String receivePayment(String clientID, double amount)
     {
         Client c = clientList.searchForClient(clientID);
         if (c == null) return "Client not found.";
-        if (amount <= 0) return "Payment must be positive.";
+        if (!Double.isFinite(amount) || amount <= 0) return "Payment must be positive.";
 
         c.addTransaction(new Transaction("PAYMENT", "Payment received", amount)); // positive == credit
         return String.format("Payment of $%.2f recorded for %s. New balance: $%.2f",

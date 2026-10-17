@@ -63,24 +63,57 @@ public class UserInterface
 
     /**
      * Prompts the user for product details and adds a product to inventory.
+     * If the price or stock is not a valid number, or is negative, the
+     * product is not added and the user is returned to the menu.
      */
     public void addProduct() 
     {
         System.out.print("Enter name: ");  String name = in.nextLine();
-        System.out.print("Enter price: "); double price = Double.parseDouble(in.nextLine());
-        System.out.print("Enter stock: "); int stock = Integer.parseInt(in.nextLine());
+        double price;
+        int stock;
+        try
+        {
+            System.out.print("Enter price: "); price = Double.parseDouble(in.nextLine().trim());
+            System.out.print("Enter stock: "); stock = Integer.parseInt(in.nextLine().trim());
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("Not a valid number - product not added.");
+            return;
+        }
         String id = warehouse.addProduct(name, price, stock);
+        if (id == null)
+        {
+            System.out.println("Price and stock must be zero or more - product not added.");
+            return;
+        }
         System.out.println("Product added: ID=" + id);
     }
 
     /**
-     * Prompts the user to add a product to a client's wishlist.
+     * Prompts the user to add a product to a client's wishlist. The quantity
+     * must be a positive whole number; otherwise nothing is added.
      */
     public void addToWishlist() 
     {
-        System.out.print("Enter client ID: ");  String clientID = in.nextLine();
-        System.out.print("Enter product ID: "); String productID = in.nextLine();
-        System.out.print("Enter quantity: ");   int qty = Integer.parseInt(in.nextLine());
+        System.out.print("Enter client ID: ");  String clientID = in.nextLine().trim();
+        System.out.print("Enter product ID: "); String productID = in.nextLine().trim();
+        System.out.print("Enter quantity: ");
+        int qty;
+        try
+        {
+            qty = Integer.parseInt(in.nextLine().trim());
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("Not a valid quantity - nothing added.");
+            return;
+        }
+        if (qty <= 0)
+        {
+            System.out.println("Quantity must be positive - nothing added.");
+            return;
+        }
         boolean ok = warehouse.addToWishlist(clientID, productID, qty);
         System.out.println(ok ? "Product added to wishlist." : "Error: client or product not found.");
     }
@@ -126,7 +159,12 @@ public class UserInterface
             }
             catch (NumberFormatException e)
             {
-                System.out.println("  Not a number — line skipped.");
+                System.out.println("  Not a number - line skipped.");
+                continue;
+            }
+            if (qty < 0)
+            {
+                System.out.println("  Quantity cannot be negative - item left as is.");
                 continue;
             }
             lines.add(new OrderLine(w.getProductID(), qty));
@@ -157,12 +195,12 @@ public class UserInterface
             }
             catch (NumberFormatException e)
             {
-                System.out.println("  Not a number — line skipped.");
+                System.out.println("  Not a number - line skipped.");
                 continue;
             }
             if (qty <= 0)
             {
-                System.out.println("  Quantity must be positive — line skipped.");
+                System.out.println("  Quantity must be positive - line skipped.");
                 continue;
             }
 
