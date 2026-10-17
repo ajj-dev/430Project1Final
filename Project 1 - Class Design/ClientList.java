@@ -46,19 +46,6 @@ public class ClientList
         return null;
     }
 
-    /**
-     * Adds one unit of a product to a client's wishlist.
-     *
-     * @param clientID  the id of the client
-     * @param productID the id of the product to add
-     * @return {@code true} if the entry was added; {@code false} if no client has
-     *         the given id
-     * @see #addClientWishlistEntry(String, String, int)
-     */
-    public boolean addClientWishlistEntry(String clientID, String productID) 
-    {
-        return addClientWishlistEntry(clientID, productID, 1);
-    }
 
     /**
      * Adds a quantity of a product to a client's wishlist. If the product is

@@ -159,7 +159,7 @@ public class UserInterface
             }
             catch (NumberFormatException e)
             {
-                System.out.println("  Not a number - line skipped.");
+                System.out.println("  Not a number — line skipped.");
                 continue;
             }
             if (qty < 0)
@@ -195,12 +195,12 @@ public class UserInterface
             }
             catch (NumberFormatException e)
             {
-                System.out.println("  Not a number - line skipped.");
+                System.out.println("  Not a number — line skipped.");
                 continue;
             }
             if (qty <= 0)
             {
-                System.out.println("  Quantity must be positive - line skipped.");
+                System.out.println("  Quantity must be positive — line skipped.");
                 continue;
             }
 

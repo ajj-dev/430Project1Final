@@ -69,18 +69,6 @@ public class Warehouse
         return p.getID();
     }
 
-    /**
-     * Adds one unit of a product to a client's wishlist.
-     *
-     * @param clientID  the id of the client
-     * @param productID the id of the product
-     * @return {@code true} if the entry was added; {@code false} if either id is unknown
-     * @see #addToWishlist(String, String, int)
-     */
-    public boolean addToWishlist(String clientID, String productID)
-    {
-        return addToWishlist(clientID, productID, 1);
-    }
 
     /**
      * Adds a quantity of a product to a client's wishlist, after checking that
@@ -158,45 +146,7 @@ public class Warehouse
         }
         return views;
     }
-    /**
-     * Returns the waitlist for a product.
-     * @param productID the id of the product
-     * @return the waitlist for the product
-     */
-    public List<WaitlistItem> getProductWaitlist(String productID)
-    {
-        Product p = catalog.searchForProduct(productID);
-        return (p == null) ? null : p.getWaitlist();
-    }
-    /**
-     * Prints the waitlist for a product.
-     * @param productID the id of the product
-     */
-    public void printProductWaitlist(String productID)
-    {
-        List<WaitlistItem> wl = getProductWaitlist(productID);
-        if (wl == null)      { System.out.println("Product not found."); return; }
-        if (wl.isEmpty())    { System.out.println("Waitlist is empty."); return; }
-        for (WaitlistItem w : wl)
-            System.out.println("Client=" + w.getClientID() + ", WaitingQty=" + w.getQuantity());
-    }
 
-    /**
-     * Records a transaction on a client's account.
-     *
-     * @param clientID    the id of the client
-     * @param type        the category of activity (e.g. {@code "PAYMENT"})
-     * @param description a human-readable detail
-     * @param amount      the signed amount: positive to credit the client, negative to charge
-     * @return {@code true} if the transaction was recorded; {@code false} if the client is unknown
-     */
-    public boolean recordTransaction(String clientID, String type, String description, double amount)
-    {
-        Client c = clientList.searchForClient(clientID);
-        if (c == null) return false;
-        c.addTransaction(new Transaction(type, description, amount));
-        return true;
-    }
 
     /**
      * Returns a client's transaction history, oldest first.
@@ -208,17 +158,6 @@ public class Warehouse
     {
         Client c = clientList.searchForClient(clientID);
         return (c == null) ? null : c.getTransactions();
-    }
-    /**
-     * Prints the transaction history for a client.
-     * @param clientID the id of the client
-     */
-    public void printClientTransactions(String clientID)
-    {
-        List<Transaction> ts = getClientTransactions(clientID);
-        if (ts == null)   { System.out.println("Client not found."); return; }
-        if (ts.isEmpty()) { System.out.println("No transactions."); return; }
-        for (Transaction t : ts) System.out.println(t);
     }
 
     /**

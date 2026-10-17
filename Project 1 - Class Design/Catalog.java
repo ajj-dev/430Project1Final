@@ -51,6 +51,5 @@ public class Catalog
      *
      * @return a new {@link List} containing all products in the catalog
      */
-    // Temporary copy
     public List<Product> getAllProducts() { return new ArrayList<>(products); }
 }

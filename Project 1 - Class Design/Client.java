@@ -1,12 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 /**
  * Represents a client (customer) in the warehouse system.
  *
  * Each client has a unique, immutable client ID, a name, an address, a
- * wishlist, a waitlist, and a transaction history. Client IDs are generated
+ * wishlist, and a transaction history. Client IDs are generated
  * automatically with the prefix {@code "C"} followed by an
  * increasing number, starting at 1001.
  *
@@ -33,8 +32,6 @@ public class Client
     /** The history of transactions (orders, invoices, payments) for this client. */
     private final List<Transaction> transactions = new ArrayList<>();
         
-    /** The products this client is waiting on (e.g., back-ordered items). */
-    private final List<WishlistItem> waitlist = new ArrayList<>();
 
     // Client generates its own ID.
     
@@ -84,14 +81,6 @@ public class Client
         } catch (NumberFormatException ignored) { }
     }
 
-    /**
-     * Adds a single unit of the given product to the client's wishlist.
-     *
-     * @param productID the ID of the product to add
-     * @return {@code true} if the entry was added or updated
-     * @see #addWishlistEntry(String, int)
-     */
-    public boolean addWishlistEntry(String productID) { return addWishlistEntry(productID, 1); }
     /**
      * Adds the specified quantity of a product to the client's wishlist.
      *
@@ -220,51 +209,6 @@ public class Client
     public void removeWishlistEntry(String productID)
     {
         wishlist.removeIf(w -> w.getProductID().equals(productID));
-    }
-    /**
-     * Sets the quantity of a waitlist entry. Does nothing if the product is
-     * not on the waitlist.
-     *
-     * @param productID the ID of the product
-     * @param quantity  the new quantity
-     */
-    public void setWaitlistQuantity(String productID, int quantity)
-    {
-        for (WishlistItem w : waitlist)
-            if (w.getProductID().equals(productID)) { w.setQuantity(quantity); return; }
-    }
-    /**
-     * Removes the given product from the client's waitlist.
-     *
-     * @param productID the ID of the product to remove
-     */
-    public void removeWaitlistEntry(String productID)
-    {
-        waitlist.removeIf(w -> w.getProductID().equals(productID));
-    }
-    /**
-     * Returns the quantity of the given product on the client's waitlist.
-     *
-     * @param productID the ID of the product
-     * @return the waitlist quantity, or {@code 0} if the product is not on the
-     *         waitlist
-     */
-    public int getWaitlistQuantity(String productID)
-    {
-        for (WishlistItem w : waitlist)
-            if (w.getProductID().equals(productID)) return w.getQuantity();
-        return 0;
-    }
-    /**
-     * Returns the client's waitlist items.
-     *
-     * the live internal list, not a copy.
-     *
-     * @return the list of {@link WishlistItem} objects on this client's waitlist
-     */
-    public List<WishlistItem> getWaitlistItems() 
-    { 
-        return waitlist; 
     }
 
     // Account history: orders, invoices, payments.
